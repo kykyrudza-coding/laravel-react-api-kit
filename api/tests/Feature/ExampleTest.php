@@ -10,10 +10,14 @@ class ExampleTest extends TestCase
     /**
      * A basic test example.
      */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_foo_endpoint_returns_bar(): void
     {
-        $response = $this->get('/');
+        $response = $this->getJson('/api/foo');
 
-        $response->assertStatus(200);
+        $response
+            ->assertOk()
+            ->assertJson([
+                'foo' => 'bar',
+            ]);
     }
 }

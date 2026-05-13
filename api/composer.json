@@ -1,16 +1,18 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "template/laravel-api",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Laravel API backend for the React template repository.",
     "keywords": [
         "laravel",
-        "framework"
+        "api",
+        "template"
     ],
     "license": "MIT",
     "require": {
         "php": "^8.3",
         "laravel/framework": "^13.8",
+        "laravel/sanctum": "^4.3",
         "laravel/tinker": "^3.0"
     },
     "require-dev": {
