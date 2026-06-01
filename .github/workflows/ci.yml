@@ -17,8 +17,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.4"
-          extensions: pdo_sqlite, sqlite3
+          php-version: '8.4'
+          extensions: pcntl, pdo_sqlite, posix, sqlite3
           coverage: none
 
       - name: Install dependencies
@@ -34,7 +34,7 @@ jobs:
 
       - name: Run migrations
         working-directory: api
-        run: php artisan migrate --force
+        run: php artisan migrate --seed --force
 
       - name: Run tests
         working-directory: api
@@ -42,7 +42,11 @@ jobs:
 
       - name: Check formatting
         working-directory: api
-        run: ./vendor/bin/pint --test
+        run: composer format:test
+
+      - name: Generate API docs
+        working-directory: api
+        run: composer docs
 
   frontend:
     name: React Frontend
@@ -66,6 +70,14 @@ jobs:
       - name: Run lint
         working-directory: frontend
         run: npm run lint
+
+      - name: Check formatting
+        working-directory: frontend
+        run: npm run format:check
+
+      - name: Run tests
+        working-directory: frontend
+        run: npm run test
 
       - name: Build
         working-directory: frontend

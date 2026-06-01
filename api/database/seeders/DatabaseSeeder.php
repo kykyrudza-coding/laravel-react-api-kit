@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,11 +17,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $viewFoo = Permission::query()->firstOrCreate(
+            ['name' => 'foo.view'],
+            ['label' => 'View protected foo endpoint'],
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $admin = Role::query()->firstOrCreate(
+            ['name' => 'admin'],
+            ['label' => 'Administrator'],
+        );
+
+        $admin->permissions()->syncWithoutDetaching([$viewFoo->id]);
+
+        $user = User::factory()->create([
+            'name' => 'Template Admin',
+            'email' => 'admin@example.com',
         ]);
+
+        $user->roles()->syncWithoutDetaching([$admin->id]);
     }
 }

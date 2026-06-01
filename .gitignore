@@ -5,10 +5,15 @@ node_modules/
 vendor/
 dist/
 build/
+.tmp/
+frontend/.tmp/
 
 .env
 .env.*
 !.env.example
+!api/.env.*.example
+!frontend/.env.*.example
+api/.phpunit.result.cache
 
 api/storage/*.key
 api/storage/framework/cache/data/*
@@ -17,6 +22,10 @@ api/storage/framework/testing/*
 api/storage/framework/views/*
 api/bootstrap/cache/*.php
 api/database/*.sqlite
+api/.scribe/
+api/public/vendor/scribe/
+api/resources/views/scribe/
+api/storage/app/private/scribe/
 
 npm-debug.log*
 yarn-debug.log*

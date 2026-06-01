@@ -1,0 +1,257 @@
+openapi: 3.0.3
+info:
+  title: Laravel API React Template
+  version: 1.0.0
+  description: Versioned API contract for the template foundation endpoints.
+servers:
+  - url: http://127.0.0.1:8000/api/v1
+    description: Local API
+security:
+  - bearerAuth: []
+paths:
+  /foo:
+    get:
+      operationId: getFoo
+      tags: [Foo]
+      security: []
+      responses:
+        '200':
+          description: Public foo response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FooResponse'
+  /auth/login:
+    post:
+      operationId: login
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Sanctum token and user payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '422':
+          description: Invalid credentials or validation error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  /auth/me:
+    get:
+      operationId: me
+      tags: [Auth]
+      responses:
+        '200':
+          description: Current authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeResponse'
+        '401':
+          description: Missing or invalid bearer token.
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [Auth]
+      responses:
+        '200':
+          description: Token revoked.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          description: Missing or invalid bearer token.
+  /admin/foo:
+    get:
+      operationId: getAdminFoo
+      tags: [Foo]
+      responses:
+        '200':
+          description: Protected foo response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FooResponse'
+        '401':
+          description: Missing or invalid bearer token.
+        '403':
+          description: Missing required permission.
+  /locale:
+    get:
+      operationId: getLocale
+      tags: [Advanced]
+      security: []
+      parameters:
+        - name: locale
+          in: query
+          schema:
+            type: string
+            enum: [en, uk]
+      responses:
+        '200':
+          description: Localized template messages.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocaleResponse'
+  /jobs/demo:
+    post:
+      operationId: dispatchDemoJob
+      tags: [Advanced]
+      responses:
+        '202':
+          description: Queue job dispatched.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          description: Missing or invalid bearer token.
+  /broadcast/demo:
+    post:
+      operationId: broadcastDemo
+      tags: [Advanced]
+      responses:
+        '200':
+          description: Demo event broadcast.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          description: Missing or invalid bearer token.
+  /files:
+    post:
+      operationId: uploadFile
+      tags: [Advanced]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: File stored.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploadResponse'
+        '401':
+          description: Missing or invalid bearer token.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    ApiUser:
+      type: object
+      required: [id, name, email, roles, permissions]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        roles:
+          type: array
+          items:
+            type: string
+        permissions:
+          type: array
+          items:
+            type: string
+    FooResponse:
+      type: object
+      required: [foo, message]
+      properties:
+        foo:
+          type: string
+        message:
+          type: string
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        device_name:
+          type: string
+    LoginResponse:
+      type: object
+      required: [token, user]
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/ApiUser'
+    MeResponse:
+      type: object
+      required: [user]
+      properties:
+        user:
+          $ref: '#/components/schemas/ApiUser'
+    MessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+    LocaleResponse:
+      type: object
+      required: [locale, messages]
+      properties:
+        locale:
+          type: string
+        messages:
+          type: object
+          required: [welcome, advanced]
+          properties:
+            welcome:
+              type: string
+            advanced:
+              type: string
+    FileUploadResponse:
+      type: object
+      required: [disk, path, url]
+      properties:
+        disk:
+          type: string
+        path:
+          type: string
+        url:
+          type: string
+    ValidationError:
+      type: object
+      required: [message, errors]
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string

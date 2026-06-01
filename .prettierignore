@@ -1,0 +1,12 @@
+vendor/
+node_modules/
+dist/
+build/
+storage/
+api/storage/
+api/bootstrap/cache/
+api/database/*.sqlite*
+frontend/.tmp/
+frontend/dist/
+api/public/vendor/scribe/
+api/resources/docs/

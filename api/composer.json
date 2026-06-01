@@ -12,16 +12,24 @@
     "require": {
         "php": "^8.3",
         "laravel/framework": "^13.8",
-        "laravel/sanctum": "^4.3",
-        "laravel/tinker": "^3.0"
+        "laravel/horizon": "^5.47",
+        "laravel/reverb": "^1.10",
+        "laravel/sanctum": "^4.0",
+        "laravel/telescope": "^5.20",
+        "laravel/tinker": "^3.0",
+        "league/flysystem-aws-s3-v3": "^3.34",
+        "predis/predis": "^3.4",
+        "sentry/sentry-laravel": "^4.25"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "knuckleswtf/scribe": "^5.10",
         "laravel/pail": "^1.2.5",
-        "laravel/pao": "^1.0.6",
         "laravel/pint": "^1.27",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
+        "pestphp/pest": "^4.7",
+        "pestphp/pest-plugin-laravel": "^4.1",
         "phpunit/phpunit": "^12.5.12"
     },
     "autoload": {
@@ -41,7 +49,7 @@
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
-            "@php artisan migrate --force",
+            "@php artisan migrate --seed --force",
             "npm install --ignore-scripts",
             "npm run build"
         ],
@@ -51,8 +59,13 @@
         ],
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
-            "@php artisan test"
+            "@php ./vendor/bin/pest"
         ],
+        "format": "./vendor/bin/pint",
+        "format:test": "./vendor/bin/pint --test",
+        "docs": "@php artisan scribe:generate",
+        "horizon": "@php artisan horizon",
+        "reverb": "@php artisan reverb:start",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -84,6 +97,10 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "platform": {
+            "ext-pcntl": "8.5.4",
+            "ext-posix": "8.5.4"
         }
     },
     "minimum-stability": "stable",

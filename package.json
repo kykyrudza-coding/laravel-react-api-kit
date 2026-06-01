@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "lint-staged": {
+    "api/**/*.php": [
+      "api/vendor/bin/pint"
+    ],
+    "frontend/**/*.{ts,tsx}": [
+      "frontend/node_modules/.bin/eslint --fix"
+    ],
+    "*.{md,json,yml,yaml,css,ts,tsx}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.3"
+  }
+}
